@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: video-api-gateway
+
+  cloud:
+    gateway.server.webflux:
+      # Rotas do Gateway
+      routes:
+        # Rota de teste - httpbin.org (SEM autenticação)
+        - id: test-route
+          uri: https://httpbin.org
+          order: 1
+          predicates:
+            - Path=/test/**
+          filters:
+            - StripPrefix=1
+            - AddResponseHeader=X-Gateway,VideoAPIGateway
+
+      # Filtros globais (aplicados a todas as rotas)
+      default-filters:
+        - AddResponseHeader=X-Gateway-Global,VideoAPI
+
+# Configuração de CORS (separada)
+# No Spring Boot 4, CORS é configurado via código ou WebFilter
+# Vamos fazer via código (criar CorsConfiguration.kt)
+
+# Actuator - Health checks e Metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
+    br.com.felixgilioli: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
