@@ -5,12 +5,22 @@ spring:
   application:
     name: video-api-gateway
 
+  # OAuth2 Resource Server - Validação de JWT do Keycloak
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # URL do Keycloak para validar tokens
+          issuer-uri: http://localhost:8180/realms/video-processing
+          # URL das chaves públicas para validar assinatura do JWT
+          jwk-set-uri: http://localhost:8180/realms/video-processing/protocol/openid-connect/certs
+
   cloud:
     gateway.server.webflux:
       # Rotas do Gateway
       routes:
-        # Rota de teste - httpbin.org (SEM autenticação)
-        - id: test-route
+        # Rota de teste PÚBLICA (SEM autenticação)
+        - id: test-route-public
           uri: https://httpbin.org
           order: 1
           predicates:
@@ -18,6 +28,17 @@ spring:
           filters:
             - StripPrefix=1
             - AddResponseHeader=X-Gateway,VideoAPIGateway
+
+        # Rota de teste PROTEGIDA (COM autenticação)
+        - id: test-route-protected
+          uri: https://httpbin.org
+          order: 2
+          predicates:
+            - Path=/protected/**
+          filters:
+            - StripPrefix=1
+            - AddResponseHeader=X-Gateway,VideoAPIGateway
+            - AddResponseHeader=X-Protected,true
 
       # Filtros globais (aplicados a todas as rotas)
       default-filters:
