@@ -1,0 +1,4 @@
+services:
+  video-api-gateway:
+    build: .
+    image: felixgilioli/video-api-gateway
