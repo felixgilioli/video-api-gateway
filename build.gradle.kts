@@ -30,6 +30,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway-server-webflux")
 	implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j")
+	implementation("org.springframework.boot:spring-boot-starter-opentelemetry")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 	testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
