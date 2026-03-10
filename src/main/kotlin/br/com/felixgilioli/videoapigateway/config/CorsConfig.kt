@@ -2,6 +2,7 @@ package br.com.felixgilioli.videoapigateway.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
@@ -10,18 +11,12 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 class CorsConfig {
 
     @Bean
+    @Order(-1)
     fun corsWebFilter(): CorsWebFilter {
         val corsConfiguration = CorsConfiguration().apply {
-            // Origens permitidas
-            allowedOrigins = listOf(
-                "http://localhost:3000",
-                "http://localhost:8080"
-            )
 
-            // Métodos HTTP permitidos
+            allowedOrigins = listOf("http://localhost:4200")
             allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-
-            // Headers permitidos
             allowedHeaders = listOf("*")
 
             // Permitir credentials (cookies, authorization headers)

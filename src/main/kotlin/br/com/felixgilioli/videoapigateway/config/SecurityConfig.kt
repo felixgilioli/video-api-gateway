@@ -3,6 +3,7 @@ package br.com.felixgilioli.videoapigateway.config
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
@@ -29,18 +30,15 @@ class SecurityConfig {
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
-            .csrf { it.disable() }  // Desabilita CSRF (API REST não precisa)
+            .cors { }
+            .csrf { it.disable() }
             .authorizeExchange { exchanges ->
                 exchanges
-                    // Rotas PÚBLICAS (sem autenticação)
+                    .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .pathMatchers("/actuator/**").permitAll()
                     .pathMatchers("/health").permitAll()
                     .pathMatchers("/test/**").permitAll()
-
-                    // Rotas PROTEGIDAS (requerem autenticação)
                     .pathMatchers("/protected/**").authenticated()
-
-                    // Todas as outras rotas requerem autenticação
                     .anyExchange().authenticated()
             }
             .oauth2ResourceServer { oauth2 ->
