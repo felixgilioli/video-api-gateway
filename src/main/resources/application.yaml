@@ -11,9 +11,9 @@ spring:
       resourceserver:
         jwt:
           # URL do Keycloak para validar tokens
-          issuer-uri: http://localhost:8180/realms/video-processing
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8180/realms/video-processing}
           # URL das chaves públicas para validar assinatura do JWT
-          jwk-set-uri: http://localhost:8180/realms/video-processing/protocol/openid-connect/certs
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://localhost:8180/realms/video-processing/protocol/openid-connect/certs}
 
   cloud:
     gateway.server.webflux:
